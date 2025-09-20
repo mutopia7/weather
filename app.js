@@ -19,7 +19,28 @@ async function getWeather(location) {
     }
 }
 
-// نمایش اطلاعات آب‌وهوای فعلی با استایل بهتر
+// نگاشت شرایط به آیکون‌های Emoji یا آیکون‌های کوچک
+function getWeatherIcon(condition) {
+    switch (condition.toLowerCase()) {
+        case "clear":
+        case "clear-day":
+            return "☀️";
+        case "partly-cloudy-day":
+        case "cloudy":
+            return "⛅";
+        case "rain":
+            return "🌧️";
+        case "snow":
+            return "❄️";
+        case "fog":
+            return "🌫️";
+        case "thunderstorm":
+            return "⛈️";
+        default:
+            return "🌡️";
+    }
+}
+
 function displayWeather(data) {
     const weatherDiv = document.getElementById("weatherResult");
     const current = data.currentConditions;
@@ -27,14 +48,15 @@ function displayWeather(data) {
     weatherDiv.innerHTML = `
         <div class="weather-card">
             <h3>${data.resolvedAddress}</h3>
+            <p class="weather-icon">${getWeatherIcon(current.icon)} ${current.conditions}</p>
             <p><strong>Temperature:</strong> ${current.temp}°F</p>
             <p><strong>Feels Like:</strong> ${current.feelslike}°F</p>
-            <p><strong>Conditions:</strong> ${current.conditions}</p>
             <p><strong>Humidity:</strong> ${current.humidity}%</p>
             <p><strong>Wind Speed:</strong> ${current.windspeed} km/h</p>
         </div>
     `;
 }
+
 
 function showError(message) {
     document.getElementById("weatherResult").innerHTML = `<p style="color:red">${message}</p>`;
