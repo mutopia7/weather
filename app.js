@@ -1,96 +1,122 @@
 const apiKey = "9RUSMDKRAZRF7R5UBFEXEA8Q7";
 
 async function getWeather(location) {
-    const apiUrl = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}?key=${apiKey}`;
-
     try {
-        const response = await fetch(apiUrl);
+        const response = await fetch(`https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}?key=${apiKey}`);
+        if (!response.ok) throw new Error("Location not found");
 
-        if (!response.ok) {
-            showError("Location not found!");
-            return;
-        }
-
-        const weatherData = await response.json();
-        displayWeather(weatherData);
+        const data = await response.json();
+        renderCurrentWeather(data);
+        renderForecast(data);
 
     } catch (error) {
-        showError("Failed to fetch weather data.");
+        showError(error.message);
     }
 }
 
-// نگاشت شرایط به آیکون‌های Emoji یا آیکون‌های کوچک
+// نگاشت شرایط به آیکون
 function getWeatherIcon(condition) {
-    switch (condition.toLowerCase()) {
-        case "clear":
-        case "clear-day":
-            return "☀️";
-        case "partly-cloudy-day":
-        case "cloudy":
-            return "⛅";
-        case "rain":
-            return "🌧️";
-        case "snow":
-            return "❄️";
-        case "fog":
-            return "🌫️";
-        case "thunderstorm":
-            return "⛈️";
-        default:
-            return "🌡️";
-    }
+    const map = {
+        "clear": "☀️",
+        "clear-day": "☀️",
+        "partly-cloudy-day": "⛅",
+        "cloudy": "☁️",
+        "rain": "🌧️",
+        "snow": "❄️",
+        "fog": "🌫️",
+        "thunderstorm": "⛈️"
+    };
+    return map[condition.toLowerCase()] || "🌡️";
 }
 
-function displayWeather(data) {
-    const weatherDiv = document.getElementById("weatherResult");
-    const current = data.currentConditions;
+// نمایش آب‌وهوای فعلی
+function renderCurrentWeather(data) {
+    const container = document.getElementById("currentWeather");
+    container.innerHTML = ""; // پاک کردن قبلی
 
-    // کارت آب‌وهوای فعلی
-    let html = `
-        <div class="weather-card current-weather">
-            <h3>${data.resolvedAddress}</h3>
-            <p class="weather-icon">${getWeatherIcon(current.icon)} ${current.conditions}</p>
-            <p><strong>Temperature:</strong> ${current.temp}°F</p>
-            <p><strong>Feels Like:</strong> ${current.feelslike}°F</p>
-            <p><strong>Humidity:</strong> ${current.humidity}%</p>
-            <p><strong>Wind Speed:</strong> ${current.windspeed} km/h</p>
-        </div>
-    `;
+    const card = document.createElement("div");
+    card.className = "weather-card";
 
-    // کارت پیش‌بینی 5 روز آینده
-    html += '<div class="forecast-container">';
-    data.days.slice(1,6).forEach(day => {
-        html += `
-            <div class="weather-card forecast-card">
-                <h4>${day.datetime}</h4>
-                <p class="weather-icon">${getWeatherIcon(day.icon)} ${day.conditions}</p>
-                <p><strong>Max:</strong> ${day.tempmax}°F</p>
-                <p><strong>Min:</strong> ${day.tempmin}°F</p>
-            </div>
-        `;
+    const title = document.createElement("h3");
+    title.textContent = data.resolvedAddress;
+    card.appendChild(title);
+
+    const icon = document.createElement("p");
+    icon.className = "weather-icon";
+    icon.textContent = `${getWeatherIcon(data.currentConditions.icon)} ${data.currentConditions.conditions}`;
+    card.appendChild(icon);
+
+    const temp = document.createElement("p");
+    temp.innerHTML = `<strong>Temperature:</strong> ${data.currentConditions.temp}°F`;
+    card.appendChild(temp);
+
+    const feels = document.createElement("p");
+    feels.innerHTML = `<strong>Feels Like:</strong> ${data.currentConditions.feelslike}°F`;
+    card.appendChild(feels);
+
+    const humidity = document.createElement("p");
+    humidity.innerHTML = `<strong>Humidity:</strong> ${data.currentConditions.humidity}%`;
+    card.appendChild(humidity);
+
+    const wind = document.createElement("p");
+    wind.innerHTML = `<strong>Wind Speed:</strong> ${data.currentConditions.windspeed} km/h`;
+    card.appendChild(wind);
+
+    container.appendChild(card);
+}
+
+// نمایش پیش‌بینی 7 روز آینده
+function renderForecast(data) {
+    const forecastContainer = document.getElementById("forecast");
+    forecastContainer.innerHTML = "";
+
+    const container = document.createElement("div");
+    container.className = "forecast-container";
+
+    data.days.slice(1, 8).forEach(day => {
+        const card = document.createElement("div");
+        card.className = "weather-card forecast-card";
+
+        const date = document.createElement("h4");
+        date.textContent = day.datetime;
+        card.appendChild(date);
+
+        const icon = document.createElement("p");
+        icon.className = "weather-icon";
+        icon.textContent = `${getWeatherIcon(day.icon)} ${day.conditions}`;
+        card.appendChild(icon);
+
+        const max = document.createElement("p");
+        max.innerHTML = `<strong>Max:</strong> ${day.tempmax}°F`;
+        card.appendChild(max);
+
+        const min = document.createElement("p");
+        min.innerHTML = `<strong>Min:</strong> ${day.tempmin}°F`;
+        card.appendChild(min);
+
+        container.appendChild(card);
     });
-    html += '</div>';
 
-    weatherDiv.innerHTML = html;
+    forecastContainer.appendChild(container);
 }
 
-
+// نمایش خطا
 function showError(message) {
-    document.getElementById("weatherResult").innerHTML = `<p style="color:red">${message}</p>`;
+    const container = document.getElementById("currentWeather");
+    container.innerHTML = "";
+    const p = document.createElement("p");
+    p.style.color = "red";
+    p.textContent = message;
+    container.appendChild(p);
 }
 
-// اتصال input و دکمه
+// اتصال input
 document.getElementById("searchBtn").addEventListener("click", () => {
-    const location = document.getElementById("cityInput").value;
-    if (location.trim() !== "") {
-        getWeather(location);
-    } else {
-        showError("Please enter a location.");
-    }
+    const loc = document.getElementById("cityInput").value.trim();
+    if (loc) getWeather(loc);
+    else showError("Please enter a location");
 });
 
-document.getElementById("cityInput").addEventListener("keypress", (e) => {
-    if (e.key === "Enter") {
-        document.getElementById("searchBtn").click();
-    }
+document.getElementById("cityInput").addEventListener("keypress", e => {
+    if (e.key === "Enter") document.getElementById("searchBtn").click();
 });

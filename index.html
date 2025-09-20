@@ -1,27 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
-    <script defer src="app.js"></script>
-    <title>Weather App</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Modern and accessible weather app showing current and 7-day forecast." />
+  <title>Weather App</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="app.js" defer></script>
 </head>
-
 <body>
-    <div class="app-container">
-        <h1>Weather App</h1>
+  <header>
+    <h1>Weather App</h1>
+  </header>
 
-        <!-- Search section -->
-        <div class="search-box">
-            <input type="text" id="cityInput" placeholder="Enter city name..." />
-            <button id="searchBtn">Search</button>
-        </div>
+  <main class="app-container">
+    <!-- Search section -->
+    <section class="search-section" aria-label="Search for city weather">
+      <label for="cityInput" class="visually-hidden">Enter city name</label>
+      <input type="text" id="cityInput" placeholder="Enter city name" aria-required="true" />
+      <button id="searchBtn">Search</button>
+    </section>
 
-        <!-- Weather result -->
-        <div id="weatherResult"></div>
-    </div>
+    <!-- Current weather -->
+    <section id="currentWeather" aria-label="Current weather information"></section>
+
+    <!-- 7-day forecast -->
+    <section id="forecast" aria-label="7-day weather forecast"></section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Weather App. All rights reserved.</p>
+  </footer>
+
+  
 </body>
-
 </html>
