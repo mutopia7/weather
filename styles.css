@@ -37,3 +37,17 @@ body {
   border-radius: 6px;
   cursor: pointer;
 }
+
+.weather-card {
+  background: #fefefe;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+  margin-top: 15px;
+  text-align: left;
+}
+
+.weather-card h3 {
+  margin-top: 0;
+  text-align: center;
+}

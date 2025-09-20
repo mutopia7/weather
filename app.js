@@ -1,40 +1,41 @@
-const sampLoc = "tehran"
+const apiKey = "9RUSMDKRAZRF7R5UBFEXEA8Q7";
 
 async function getWeather(location) {
-    const apiKey = "9RUSMDKRAZRF7R5UBFEXEA8Q7";
-    const apiUrl = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}?key=${apiKey}`
+    const apiUrl = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}?key=${apiKey}`;
 
     try {
         const response = await fetch(apiUrl);
 
         if (!response.ok) {
-            showError();
+            showError("Location not found!");
+            return;
         }
 
         const weatherData = await response.json();
-        displayWeather(weatherData)
+        displayWeather(weatherData);
 
-    } catch(error) {
-        console.error("Failed to get weather data")
+    } catch (error) {
+        showError("Failed to fetch weather data.");
     }
 }
 
-// نمایش اطلاعات اولیه (فعلا ساده)
+// نمایش اطلاعات آب‌وهوای فعلی با استایل بهتر
 function displayWeather(data) {
     const weatherDiv = document.getElementById("weatherResult");
     const current = data.currentConditions;
 
     weatherDiv.innerHTML = `
-        <h3>${data.resolvedAddress}</h3>
-        <p>Temperature: ${current.temp}°F</p>
-        <p>Feels Like: ${current.feelslike}°F</p>
-        <p>Conditions: ${current.conditions}</p>
-        <p>Humidity: ${current.humidity}%</p>
-        <p>Wind Speed: ${current.windspeed} km/h</p>
+        <div class="weather-card">
+            <h3>${data.resolvedAddress}</h3>
+            <p><strong>Temperature:</strong> ${current.temp}°F</p>
+            <p><strong>Feels Like:</strong> ${current.feelslike}°F</p>
+            <p><strong>Conditions:</strong> ${current.conditions}</p>
+            <p><strong>Humidity:</strong> ${current.humidity}%</p>
+            <p><strong>Wind Speed:</strong> ${current.windspeed} km/h</p>
+        </div>
     `;
 }
 
-// نمایش خطا
 function showError(message) {
     document.getElementById("weatherResult").innerHTML = `<p style="color:red">${message}</p>`;
 }
@@ -49,12 +50,8 @@ document.getElementById("searchBtn").addEventListener("click", () => {
     }
 });
 
-
-// اجازه دادن به Enter برای جستجو
 document.getElementById("cityInput").addEventListener("keypress", (e) => {
     if (e.key === "Enter") {
         document.getElementById("searchBtn").click();
     }
 });
-
-getWeather(sampLoc)
