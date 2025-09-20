@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,7 +8,20 @@
     <script defer src="app.js"></script>
     <title>Weather App</title>
 </head>
+
 <body>
-    
+    <div class="app-container">
+        <h1>Weather App</h1>
+
+        <!-- Search section -->
+        <div class="search-box">
+            <input type="text" id="cityInput" placeholder="Enter city name..." />
+            <button id="searchBtn">Search</button>
+        </div>
+
+        <!-- Weather result -->
+        <div id="weatherResult"></div>
+    </div>
 </body>
+
 </html>
