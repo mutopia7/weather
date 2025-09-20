@@ -12,11 +12,49 @@ async function getWeather(location) {
         }
 
         const weatherData = await response.json();
-        console.log(weatherData)
+        displayWeather(weatherData)
 
     } catch(error) {
         console.error("Failed to get weather data")
     }
 }
+
+// نمایش اطلاعات اولیه (فعلا ساده)
+function displayWeather(data) {
+    const weatherDiv = document.getElementById("weatherResult");
+    const current = data.currentConditions;
+
+    weatherDiv.innerHTML = `
+        <h3>${data.resolvedAddress}</h3>
+        <p>Temperature: ${current.temp}°F</p>
+        <p>Feels Like: ${current.feelslike}°F</p>
+        <p>Conditions: ${current.conditions}</p>
+        <p>Humidity: ${current.humidity}%</p>
+        <p>Wind Speed: ${current.windspeed} km/h</p>
+    `;
+}
+
+// نمایش خطا
+function showError(message) {
+    document.getElementById("weatherResult").innerHTML = `<p style="color:red">${message}</p>`;
+}
+
+// اتصال input و دکمه
+document.getElementById("searchBtn").addEventListener("click", () => {
+    const location = document.getElementById("cityInput").value;
+    if (location.trim() !== "") {
+        getWeather(location);
+    } else {
+        showError("Please enter a location.");
+    }
+});
+
+
+// اجازه دادن به Enter برای جستجو
+document.getElementById("cityInput").addEventListener("keypress", (e) => {
+    if (e.key === "Enter") {
+        document.getElementById("searchBtn").click();
+    }
+});
 
 getWeather(sampLoc)
