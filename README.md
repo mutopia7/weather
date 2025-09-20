@@ -2,7 +2,7 @@
 
 A modern, responsive weather application with beautiful UI and accurate forecasting.
 
-[WeatherVision](https://)
+[WeatherVision](https://github.com/mutopia7/weather)
 
 
 ## ✨ Features
@@ -18,7 +18,7 @@ A modern, responsive weather application with beautiful UI and accurate forecast
 
 ## 🚀 Live Demo
 
-Check out the live application: [WeatherVision Live Demo](https://)
+Check out the live application: [WeatherVision Live Demo](https://github.com/mutopia7/weather)
 
 ## 🛠️ Technologies Used
 
