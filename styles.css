@@ -58,3 +58,20 @@ body {
   text-align: center;
   margin: 10px 0;
 }
+
+.forecast-container {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-top: 15px;
+}
+
+.forecast-card {
+  flex: 1 1 45%;
+  margin: 5px;
+  padding: 10px;
+  background: #f9f9f9;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}

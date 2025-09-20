@@ -45,8 +45,9 @@ function displayWeather(data) {
     const weatherDiv = document.getElementById("weatherResult");
     const current = data.currentConditions;
 
-    weatherDiv.innerHTML = `
-        <div class="weather-card">
+    // کارت آب‌وهوای فعلی
+    let html = `
+        <div class="weather-card current-weather">
             <h3>${data.resolvedAddress}</h3>
             <p class="weather-icon">${getWeatherIcon(current.icon)} ${current.conditions}</p>
             <p><strong>Temperature:</strong> ${current.temp}°F</p>
@@ -55,6 +56,22 @@ function displayWeather(data) {
             <p><strong>Wind Speed:</strong> ${current.windspeed} km/h</p>
         </div>
     `;
+
+    // کارت پیش‌بینی 5 روز آینده
+    html += '<div class="forecast-container">';
+    data.days.slice(1,6).forEach(day => {
+        html += `
+            <div class="weather-card forecast-card">
+                <h4>${day.datetime}</h4>
+                <p class="weather-icon">${getWeatherIcon(day.icon)} ${day.conditions}</p>
+                <p><strong>Max:</strong> ${day.tempmax}°F</p>
+                <p><strong>Min:</strong> ${day.tempmin}°F</p>
+            </div>
+        `;
+    });
+    html += '</div>';
+
+    weatherDiv.innerHTML = html;
 }
 
 
